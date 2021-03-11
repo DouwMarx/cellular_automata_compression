@@ -1,0 +1,221 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframDesktop 12.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       161,          7]
+NotebookDataLength[      8021,        213]
+NotebookOptionsPosition[      6270,        175]
+NotebookOutlinePosition[      6698,        192]
+CellTagsIndexPosition[      6655,        189]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[StyleBox["Cellular Automat-based, lossless data compression", \
+"Title"]], "Text",
+ CellChangeTimes->{{3.817290061441205*^9, 
+  3.817290083781542*^9}},ExpressionUUID->"c42fdc3e-0650-46de-8824-\
+5f15eb81e57d"],
+
+Cell[CellGroupData[{
+
+Cell["Problem definition", "Chapter",
+ CellChangeTimes->{{3.817290126016195*^9, 
+  3.8172901354461775`*^9}},ExpressionUUID->"865ec920-b28c-4353-a355-\
+fc0d052ae890"],
+
+Cell["Consider a byte of data that we intend to send to someone\
+\[LineSeparator]", "Text",
+ CellChangeTimes->{{3.817290156824004*^9, 3.8172901761579647`*^9}, {
+  3.817290277804888*^9, 
+  3.817290281429299*^9}},ExpressionUUID->"c62ccec7-349c-4cbc-8bdd-\
+ad1d9b59a682"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"data", " ", "=", " ", 
+  RowBox[{"RandomInteger", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"0", ",", "1"}], "}"}], ",", "8"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.817290180847797*^9, 3.8172902225757284`*^9}},
+ CellLabel->
+  "In[352]:=",ExpressionUUID->"11ed10f4-926d-47fe-9fa4-8ed2ca4c4c88"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0", ",", "0", ",", "1", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0"}],
+   "}"}]], "Output",
+ CellChangeTimes->{{3.817290215050871*^9, 3.8172902228298855`*^9}},
+ CellLabel->
+  "Out[352]=",ExpressionUUID->"16868a1c-3e80-4acd-bf6f-68890cb13f89"]
+}, Open  ]],
+
+Cell[TextData[{
+ "In the simplest case, when sending the bits one by one, we can think of the \
+total number of options that can be chosen from is halved with every bit that \
+is sent.\nWe start of with ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["2", "8"], "="}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "5d59c867-fbd7-4620-9c5e-45d1740c03a8"],
+ " 256 different forms that data could take. As a bit is sent this reduces: \
+256, 128, 64, 32, 16, 8, 4, 2, and when the final bit is sent the data is \
+uniquely defined. \n\nBut is there a way to send less bits to transmit the \
+same data (compression)? In this post, cellular automata is used to generate \
+sequences shorter than the initial data that uniquely define the data and \
+thereby compress it. \n\nFor instance, consider the evolution (15 time steps) \
+of the example data above as initial condition of Elementary cellular \
+automata, rule 30:"
+}], "Text",
+ CellChangeTimes->{{3.8172902855047965`*^9, 3.8172904063577757`*^9}, {
+   3.817290544717456*^9, 3.817290879275849*^9}, {3.817290956628024*^9, 
+   3.817290968260733*^9}, 
+   3.817291038769*^9},ExpressionUUID->"6a4aa33b-2a57-49b4-b8ba-ef04b97b0654"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ArrayPlot", "[", 
+  RowBox[{"CellularAutomaton", "[", 
+   RowBox[{"30", ",", "data", ",", "15"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.8172909006718283`*^9, 3.81729094535655*^9}},
+ CellLabel->
+  "In[359]:=",ExpressionUUID->"57ba0217-34c1-4d9e-8f6b-70a7c6b427d6"],
+
+Cell[BoxData[
+ GraphicsBox[
+  RasterBox[{{1, 1, 1, 0, 0, 1, 1, 0}, {1, 1, 1, 1, 0, 0, 0, 1}, {0, 0, 0, 0, 
+   1, 1, 0, 0}, {1, 1, 0, 1, 1, 1, 1, 0}, {0, 1, 0, 0, 0, 0, 1, 0}, {0, 0, 1, 
+   1, 0, 1, 1, 1}, {1, 0, 0, 0, 1, 1, 1, 1}, {1, 1, 0, 1, 1, 1, 1, 1}, {0, 1, 
+   0, 0, 0, 0, 0, 0}, {0, 1, 0, 1, 1, 0, 1, 1}, {0, 1, 0, 0, 1, 0, 0, 1}, {0, 
+   1, 0, 1, 1, 1, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 1}, {0, 0, 1, 1, 0, 1, 0, 1}, {
+   1, 0, 0, 1, 0, 0, 1, 1}, {1, 1, 0, 1, 0, 1, 1, 1}}, {{0, 0}, {8, 16}}, {0, 
+   1}],
+  Frame->Automatic,
+  FrameLabel->{None, None},
+  FrameTicks->{{None, None}, {None, None}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
+    Automatic}]], "Output",
+ CellChangeTimes->{{3.817290936579029*^9, 3.817290970229023*^9}},
+ CellLabel->
+  "Out[359]=",ExpressionUUID->"2289b8fe-89cf-41ce-b2cd-fe255cb765df"]
+}, Open  ]],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{
+  3.817290881826872*^9},ExpressionUUID->"6d0f8ce2-c871-44db-85cb-\
+cf6835d1f7b3"],
+
+Cell[TextData[{
+ "If the rule is fixed, it still takes ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["log", "2"], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "c96970cc-6cda-4db0-895f-492ddeeae29f"],
+ "(n) bits to convey the position of the read index. In this case 3 bits. \
+This means that the data needs to be uniquely defined after 4 or less updates \
+for any compression to occur."
+}], "Text",
+ CellChangeTimes->{{3.8172912328946466`*^9, 3.8172913056519947`*^9}, {
+  3.8172913392040796`*^9, 
+  3.8172914314036613`*^9}},ExpressionUUID->"8a39846d-a05d-4ebd-900b-\
+e2c3bead194c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"2", "^", "8"}]], "Input",
+ CellChangeTimes->{{3.8172905691493907`*^9, 3.8172905707098656`*^9}},
+ CellLabel->
+  "In[353]:=",ExpressionUUID->"5b962d0d-18df-4e19-8c95-e458df72a436"],
+
+Cell[BoxData["256"], "Output",
+ CellChangeTimes->{3.8172905714889727`*^9},
+ CellLabel->
+  "Out[353]=",ExpressionUUID->"ae9d2b59-5dd7-4981-be26-2051c72fee5e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"2", "^", "5"}]], "Input",
+ CellChangeTimes->{{3.817290628183077*^9, 3.817290677424093*^9}},
+ CellLabel->
+  "In[356]:=",ExpressionUUID->"a06f1349-726b-4568-b080-d073c14c9966"],
+
+Cell[BoxData["32"], "Output",
+ CellChangeTimes->{{3.8172906340968666`*^9, 3.817290677739906*^9}},
+ CellLabel->
+  "Out[356]=",ExpressionUUID->"91d48083-2de4-4ac1-8620-f92fddad381a"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1904, 997},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification:>1.7 Inherited,
+FrontEndVersion->"12.1 for Microsoft Windows (64-bit) (March 20, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"83916fe8-05f3-4e93-a156-251a8eff7fea"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[561, 20, 222, 4, 123, "Text",ExpressionUUID->"c42fdc3e-0650-46de-8824-5f15eb81e57d"],
+Cell[CellGroupData[{
+Cell[808, 28, 165, 3, 116, "Chapter",ExpressionUUID->"865ec920-b28c-4353-a355-fc0d052ae890"],
+Cell[976, 33, 268, 5, 98, "Text",ExpressionUUID->"c62ccec7-349c-4cbc-8bdd-ad1d9b59a682"],
+Cell[CellGroupData[{
+Cell[1269, 42, 328, 8, 49, "Input",ExpressionUUID->"11ed10f4-926d-47fe-9fa4-8ed2ca4c4c88"],
+Cell[1600, 52, 290, 7, 76, "Output",ExpressionUUID->"16868a1c-3e80-4acd-bf6f-68890cb13f89"]
+}, Open  ]],
+Cell[1905, 62, 1209, 22, 326, "Text",ExpressionUUID->"6a4aa33b-2a57-49b4-b8ba-ef04b97b0654"],
+Cell[CellGroupData[{
+Cell[3139, 88, 295, 6, 49, "Input",ExpressionUUID->"57ba0217-34c1-4d9e-8f6b-70a7c6b427d6"],
+Cell[3437, 96, 1230, 26, 784, "Output",ExpressionUUID->"2289b8fe-89cf-41ce-b2cd-fe255cb765df"]
+}, Open  ]],
+Cell[4682, 125, 147, 3, 83, "Input",ExpressionUUID->"6d0f8ce2-c871-44db-85cb-cf6835d1f7b3"],
+Cell[4832, 130, 605, 14, 98, "Text",ExpressionUUID->"8a39846d-a05d-4ebd-900b-e2c3bead194c"],
+Cell[CellGroupData[{
+Cell[5462, 148, 202, 4, 49, "Input",ExpressionUUID->"5b962d0d-18df-4e19-8c95-e458df72a436"],
+Cell[5667, 154, 157, 3, 76, "Output",ExpressionUUID->"ae9d2b59-5dd7-4981-be26-2051c72fee5e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5861, 162, 198, 4, 49, "Input",ExpressionUUID->"a06f1349-726b-4568-b080-d073c14c9966"],
+Cell[6062, 168, 180, 3, 76, "Output",ExpressionUUID->"91d48083-2de4-4ac1-8620-f92fddad381a"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
