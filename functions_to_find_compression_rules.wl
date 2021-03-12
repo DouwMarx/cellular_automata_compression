@@ -1,9 +1,9 @@
 (* ::Package:: *)
 
 getEvolutionsForAllPermutations::usage = "Solves for all the evolution paths for the permutations possible for a given data dimensionality";
-getEvolutionsForAllPermutations[ruleNumber_, ruleRange_, dataDimensionality_]:=(
+getEvolutionsForAllPermutations[ruleNumber_, ruleRange_,startTime_ ,dataDimensionality_]:=(
 p = Tuples[{1,0},dataDimensionality];(*All possible permutations for this given data dimensionality and number of colors*);
-evolutions = CellularAutomaton[{ruleNumber,2,ruleRange},#,{{1,dataDimensionality},All}]&/@p (* Only evolve up to number of data dimensionality, any more would be a waste (not lead to compression) *)
+evolutions = CellularAutomaton[{ruleNumber,2,ruleRange},#,{{startTime,dataDimensionality-1 + startTime},All}]&/@p (* Only evolve up to number of data dimensionality, any more would be a waste (not lead to compression) *)
 (* Notice that initial state of CA is not returned. Assumption is made that CA step is made before reading bit from read index*)
 )
 
@@ -27,8 +27,8 @@ allperm = numberOfUpdatesToDistinguishPermutation[evolutions,#]&/@Range[2^dataDi
 )
 
 
-testRuleRangeDimForReduction[ruleNumber_,ruleRange_,dataDimensionality_]:=(
-	evols = getEvolutionsForAllPermutations[ruleNumber,ruleRange, dataDimensionality];
+testRuleRangeDimForReduction[ruleNumber_,ruleRange_,startTime_,dataDimensionality_]:=(
+	evols = getEvolutionsForAllPermutations[ruleNumber,ruleRange,startTime, dataDimensionality];
 	nouta = numberOfUpdatesToDistinguishAnyPermutation[evols,dataDimensionality];
 	(*compression = Min[Max/@Transpose[nouta]]< dataDimensionality;*)
 	permutationsCompressable = UnitStep[dataDimensionality  -1 - nouta]; (*If smaller than 0: 0, if largereq than 0: 1*)
